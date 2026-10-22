@@ -1,0 +1,104 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r, include=FALSE}
+df <- read.csv("Global_AI_Content_Impact_Dataset.csv")
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,     
+  message = FALSE,  
+  warning = FALSE,  
+  error = TRUE    
+)
+```
+
+```{r}
+library(knitr)
+library(ggplot2)
+library(kableExtra)
+library(tidyverse)
+
+```
+
+# Ferramentas de IA mais utilizadas por setor
+
+Nessa seção, iremos analisar quais as ferramentas mais aderidas por setor, qual sua aplicação principal e o volume de conteúdo gerado por estas IAs.
+
+```{r}
+df_capado <- subset(df, select = c(Country,Industry, AI.Generated.Content.Volume..TBs.per.year., Top.AI.Tools.Used))
+```
+
+```{r}
+aparicoes <- df_capado %>%
+  group_by(Industry, Top.AI.Tools.Used) %>%
+  summarise(
+    Contagem = n(),
+    .groups = 'drop'
+  )   %>%
+  pivot_wider(names_from = Top.AI.Tools.Used, values_from = Contagem, values_fill = 0)
+  names(aparicoes) <- c("Setores", "Bard", "ChatGPT", "Claude","DALL-E","Midjourney","Stable Diffusion","Synthesia") 
+  aparicoes$Setores <- c("Automotiva","Educação","Finanças","Jogos","Saúde","Legislativo","Manufatura","Marketing","Mídia","Varejo")
+```
+
+```{r}
+aparicoes %>%
+  kableExtra::kbl(
+    align = 'c',
+    caption = "Contagem de ferramentas IAs mais utilizadas por setor",
+    booktabs = TRUE,
+    table.envir = "table"
+  ) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = FALSE,
+    latex_options = c("scale_down", "hold_position"),
+    font_size = 9
+  ) %>%
+  kableExtra::column_spec(1, width = "3cm") %>%  
+  kableExtra::column_spec(2:4, width = "2cm")
+```
+
+As 3 primeiras ferramentas da tabela acima, Bard (também conhecido como Google Gemini), ChatGPT e Claude são IAs de texto e geralmente utilizadas sob o contexto de pesquisas e resolução de problemas lógicos. Já as ferramentas Dall-E, Midjourney, Stable Diffusion e Synthesia são IAs especializadas em geração de imagens e vídeos, possuindo mais aplicação em contextos de mídia, divulgação e conteúdo criativo.
+
+Abaixo, um gráfico da quantidade de IAs de texto e de imagem por setor, com IAs de texto em azul e IAs de imagem em vermelho.
+
+```{r, fig.width=8, fig.height=6, out.width="80%"}
+IAstexto <- apply(aparicoes[,2:4],1, sum)
+IAsvedios <- apply(aparicoes[,5:8],1, sum)
+df_rinhadeias <- c("Automotiva","Educação","Finanças","Jogos","Saúde","Legislativo","Manufatura","Marketing","Mídia","Varejo")
+df_rinhadeias <- as.data.frame(df_rinhadeias)
+df_rinhadeias[,2]<- IAstexto
+df_rinhadeias[,3]<- IAsvedios
+colnames(df_rinhadeias) <- c("Setores", "IAs de texto", "IAs de imagem")
+df_longo <- df_rinhadeias %>%
+  pivot_longer(
+    cols = c("IAs de texto", "IAs de imagem"),
+    names_to = "Tipos_IA",
+    values_to = "Contagem"
+  )
+ggplot(df_longo, aes(x = Setores, y = Contagem, fill = Tipos_IA)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  geom_text(aes(label = Contagem), position = position_dodge(width = 0.8), vjust = -0.5, size = 3) +
+  labs(title = "Uso de IAs de Imagem x IAs de texto por setor", x = "Setores", y = "Contagem de Ferramentas Utilizadas", fill = "Tipos de IA") +
+  scale_fill_manual(values = c("IAs de texto" = "steelblue", "IAs de imagem" = "darkred")) + theme(legend.position = "none") 
+```
+
+Nesse gráfico, podemos observar que o setor de mídia foi o que mais utilizou IAs de imagem e de texto, seguido da indústria de jogos, que foi o segundo setor a mais utilizar ambos os tipos de IA.
+
+A seguir, podemos ver a média da porcentagem de conteúdo de IA gerado por cada setor dentro do período analisado pela nossa pesquisa (2020-2024):
+
+```{r, fig.width=8, fig.height=6, out.width="80%"}
+df_percentual <- subset(df, select = c(Industry,AI.Generated.Content.Volume..TBs.per.year.))
+df_percentual$Industry <- c("Automotiva","Educação","Finanças","Jogos","Saúde","Legislativo","Manufatura","Marketing","Mídia","Varejo")
+df_mediapercentual <- df_percentual %>% 
+  group_by(Industry) %>%
+  summarise(Média = mean(AI.Generated.Content.Volume..TBs.per.year., na.rm = TRUE))
+ggplot(df_mediapercentual, aes(Industry, Média, group = 1)) + geom_line(color= "steelblue", linewidth = 1) + geom_point(color= "lightblue", size = 3) + labs(x = "Setores", y = "Média percentual") + theme(legend.position = "none")
+```
+
+Podemos observar que os setores de finanças e jogos são aqueles que mais geraram conteúdo de IA em suas respectivas áreas. Enquanto que varejo e marketing são os que menos geraram conteúdo IA em relação a outros conteúdos dentro do setor.

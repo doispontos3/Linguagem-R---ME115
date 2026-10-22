@@ -1,0 +1,54 @@
+---
+title: "Impacto das IAs nas indústrias"
+author: "Raul Rocha, Luis Felipe, Felipe Gaycinoto"
+date: "2025-05-16"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introdução
+
+Com os avanços recentes das tecnologias de inteligência artificial, a sua adoção tem se proliferado cada vez mais  
+nos mais diversos setores industriais, especialmente em países de primeiro mundo. Uma das consequências  
+deste avanço são os impactos nas estatísticas de desemprego nestes setores. Iremos buscar responder às  
+seguintes perguntas de interesse:
+
+- Quais indústrias/setores estão mais vulneráveis aos aumentos nas taxas de desemprego causadas pela IA?  
+- Como a colaboração humano-IA, a regulação e os índices de confiança do consumidor afetam as taxas de desemprego?  
+- Como o marketshare das empresas está organizado, quais tecnologias de IA mais afetam as taxas de desemprego e como o volume de conteúdo gerado por IA se relaciona com essas taxas.
+
+# Banco de Dados
+
+Para responder tais perguntas, nos basearemos no banco de dados “Impacts of AI on Digital Media (2020 - 2025)”, disponível na plataforma Kaggle (link na bibliografia).
+
+## Descrição das Variáveis
+
+- **Country**: País ao qual as estatísticas se referem. No nosso banco de dados, são 10: Coreia do Sul,  
+  China, Estados Unidos, França, Austrália, Reino Unido, Canadá, Índia, Japão e Alemanha.
+
+- **Year**: Ano no qual as estatísticas foram observadas. O período coberto no banco de dados é entre 2020  
+  e 2025.
+
+- **Industry**: Setores onde as estatísticas foram observadas. São eles: Mídias, direito, automotivo, jogos,  
+  varejo, educação, saúde, publicidade, manufatura e finanças.
+
+- **AI.Adoption.Rate**: Taxa de adoção das diferentes tecnologias de IA.
+
+- **AI.Generated.Content.Volume..TBs.per.year**: Volume de dados gerados por AI por ano, em terabytes.
+
+- **Job.Loss.Due.to.AI**: Taxa de desemprego causada pelas tecnologias de IA.
+
+- **Revenue.Increase.Due.to.AI**: Taxa de aumento de lucro causado pelas tecnologias de IA.
+
+- **Human.AI.Collaboration.Rate**: Taxa de colaboração entre humanos e tecnologias de IA.
+
+- **Top.AI.Tools.Used**: Ferramentas de IA mais utilizadas.
+
+- **Regulation.Status**: Grau de regulação das tecnologias de IA. Sendo elas: estrita, moderada e leniente.
+
+- **Consumer.Trust.in.AI**: Taxa de confiança do consumidor nas tecnologias de IA.
+
+- **Market.Share.of.AI.Companies**: Fatia de mercado ocupada por empresas de IA.

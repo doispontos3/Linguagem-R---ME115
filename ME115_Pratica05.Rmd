@@ -1,0 +1,98 @@
+---
+title: "ME115_Pratica05.R"
+author: "Felipe"
+output: html_document
+date: "2025-04-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Atividade
+1. Escreva uma sentença falando sobre o conjunto de dados: quantas observações, quantas colunas e nomes
+das colunas. Essas informações devem ser inseridas diretamente no texto.
+
+2. Imprima as primeiras 6 linhas do conjunto de dados. Dica: função head().
+```{r}
+head(cars)
+```
+
+
+3. Carregue o pacote knitr. Se você não quiser que o código e seu resultado apareçam no relatório, use a
+opção include=FALSE.
+```{r}
+library(knitr)
+```
+
+4. Uma solução melhor para formatar uma tabela/matriz/data frame pode ser usar a função kable() do
+pacote knitr, que você acabou de carregar. Imprima as primeiras 6 linhas dos dados cars usando esse
+recurso e compare com a saída do item 2.
+```{r}
+kable(cars)
+```
+
+
+5. Exiba um resumo do conjunto de dados usando a função summary().
+```{r}
+summary(cars)
+```
+
+
+6. Faça um gráfico de dispersão usando a função "plot()", no qual a distância ("dist") deve estar no eixo x
+e velocidade ("speed") no eixo y. Controle a saída do gráfico usando as opções "fig.height" e "fig.width".
+Insira também uma descrição da figura usando "fig.cap".
+```{r}
+plot(cars$dist, cars$speed, xlab="Distância", ylab="Velocidade em mph", pch=2, col="red",las=1)
+#plot nativo do R é intankavel por isso existe o mr. ggplot()
+```
+
+
+7. Crie um objeto da classe data.frame e nomeie-o apropriadamente. O objeto deve conter o conjunto de
+dados cars e as variáveis a seguir:
+• speed2 = speedˆ2
+• log.dist = log(dist)
+• sqrt.dist = sqrt(dist)
+```{r}
+dados <- cars
+dados$speed2 = dados$speed^2
+dados$log.dist = dados$log(dist)
+dados$sqrt.dist = dados$sqrt(dist)
+```
+
+8. Crie uma aplicação para uma função da família apply, mas que seja diferente dos exemplos da aula
+prática 4. Apresente os resultados no seu documento.
+
+9. Reproduza o resultado abaixo:
+• Média e desvio padrão da velocidade (speed):
+```{r}
+media.speed = mean(cars$speed)
+sd.speed = round(sd(cars$speed), 2)
+```
+
+A média e desvio padrão da variável speed são 15.4 e 5.3, respectivamente.
+• Faça o mesmo para calcular a média e desvio padrão da distância (dist).
+
+
+10. Oculte o código do seu relatório usando a opção echo.
+

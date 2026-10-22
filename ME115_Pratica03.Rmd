@@ -1,0 +1,159 @@
+---
+title: "ME115 - Linguagem R"
+subtitle: Atividade Prática 03
+date: "1º semestre de 2025"
+output:
+  pdf_document: default
+  ## html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introdução
+
+Nessa atividade, exploraremos:
+
+1. funções do tipo pré-definidas (*built-in*);
+2. funções definidas pelo usuário: criar e executar funções.
+
+Parte dos exercícios são do Capítulo 3 do Livro: 
+https://rafalab.github.io/dsbook/programming-basics.html.
+
+## Atividade
+
+1. A função `nchar()` retorna o total de caracteres de cada elemento de um vector da classe `character`. Considere o conjunto de dados `murders` do pacote `dslabs`. Escreva uma linha de código que aloca à variável `nome_novo` uma abreviação do nome estado quando o nome do mesmo tem mais do que 8 caracteres. 
+
+    ```{r}
+    library(dslabs)
+    data(murders)
+
+    nome_novo = ifelse(nchar(murders$state)> 8, murders$abb, NA)
+    murders$nchar = nchar(murders$state)
+    murders$nome_novo = nome_novo
+    head(murders)
+    ```
+    
+
+2. Crie uma função chamada `soma_n()` que retorna, para um dado valor de `n`, a soma dos inteiros de 1 até `n` (inclusive). Use a função para determinar a soma de inteiros de 1 a 5000. Use a função `sum()` para validar sua função.
+```{r}
+n = 5000
+soma_n = function(n) {
+  k = 0  
+  for(i in 1:n) {
+    k = k + i  
+}
+  return(k)
+}
+soma_n(n)
+```
+
+
+3. Escreva uma função chamada `calcule_sn()` que, para qualquer valor $n$, calcule a soma $S_n= 1^2 + 2^2 + \ldots + n^2$. Aplique a função para $n=10$.
+```{r}
+n = 10
+calcule_sn = function(n) {
+  soma= 0
+  for(i in 1:n) {
+    soma = soma + i ^ 2
+  }
+  return(soma)
+}
+calcule_sn(n)
+```
+
+
+4. Defina um vetor numérico vazio `s_n` de tamanho 25 usando `s_n <- vector("numeric", 25)` e armazene os resultados de $S_1, \, S_2, \, \ldots, \, S_{25}$ no vetor, usando `for` *loop* e a função `calcule_sn()`.
+```{r}
+n= 25
+s_n = vector("numeric", 25)
+for(i in 1:25) {
+  s_n[i] = calcule_sn(i)
+}
+s_n
+```
+
+
+5. Confirme que o resultado de $S_n= 1^2 + 2^2 + \ldots + n^2$ é $n(n+1)(2n+1)/6$.
+```{r}
+j = 10
+guri = j(j+1)(j+2)/6
+teste = ifelse(guri == calcule_sn(j), TRUE, FALSE)
+teste
+```
+
+
+6. Crie uma função chamada `dados_rolando` que apresenta a soma do lançamento de `n` dados honestos. **Dica:** use a função `sample`.
+```{r}
+n= 10
+dados_rolando = function(n) {
+  sample(1:6, size = n, replace=TRUE)
+}
+dados_rolando(n)
+```
+
+
+7. Crie uma função chamada `f_to_k` que converte graus em Fahrenheit para Kelvin. Calcule as temperaturas dos pontos de fusão (0°C ou 32°F) e ebulição (100°C ou 212°F) da água em graus Kelvin. Lembrando que:
+$$\frac{t_C}{5} = \frac{t_F - 32}{9} = \frac{t_k - 273}{5}.$$
+```{r}
+f=32
+f_to_k = function(f) {
+  c = ((f - 32)*5)/9
+  k = c + 273
+  return(k)
+}
+f_to_k(f)
+```
+
+
+8. Crie uma função chamada `stats()` que, tendo um vetor como argumento, retorna os valores da média, variância e desvio padrão. Calcule a média, variância e desvio padrão usando as respectivas fórmulas e não as funções pré-definidas no R. Use as funções `mean()`, `var()` e `sd()` para validar sua função.
+```{r}
+vetor = vector("numeric", 20)
+comprimento = length(vetor)
+for(i in 1:20) {
+  vetor[i] = sample(20, 1, replace= TRUE)
+}
+stats= function(vetor) {
+  soma = 0
+  comprimento = length(vetor)
+  for(i in 1:comprimento){
+    soma = soma + vetor[i]
+  }
+  media = soma/comprimento
+  variancia = function(media,vetor) {
+    coisa = 0
+    soma = 0
+    for(i in 1:comprimento) {
+      coisa = (vetor[i] - media)
+      soma = soma + coisa
+    }
+    berg = soma/(comprimento-1)
+    return(berg)
+  }
+  variância = variancia(media,vetor)
+  dp= sqrt(variância)
+  flinston = c(media, variância, dp)
+  return(flinston)
+}  
+stats(vetor)
+
+
+  
+
+```
+
+9. Utilize a função `runif()` para criar uma função que retorne um número aleatório inteiro entre 0 e 100 (0 e 100 inclusive).
+
+10. Crie uma função  chamada `multiplos3` com o intuito de receber como argumento um número natural n e retorna um array com os n primeiros múltiplos de 3. Aplique a função para $n=20$.
+
+
+## Desafio
+
+11. Escreva uma função chamada `fibonacci()` que retorna a sequência de fibonacci de um número $n$. Use a função para $n=0$, $n=1$, $n=2$ e $n=10$. Lembre que `fibonacci(0)` deve retornar 0 e `fibonati(1)` deve retornar 1.
+
+12. Escreva uma função chamada `palindroma()` que recebe uma frase (palavra) e retorna "É palíndromo" se a frase é palíndroma e "Não é :(" caso contrário. Uma frase é palíndroma se ao ser lida da esquerda para a direita produz o mesmo resultado se lida da direita para a esquerda. Exemplo de palíndromos: "A torre da derrota", "ama", "Assim a aia ia a missa". Teste a função usando as frases exemplo.  
+
+## Agradecimentos
+
+O material foi produzido pela Profa. Tatiana Benaglia para o curso de ME115 e alterado pelos professores Rafael e Larissa em 1S2023.
